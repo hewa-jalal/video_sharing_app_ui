@@ -31,6 +31,9 @@ dependencies:
   auto_size_text: ^2.1.0
   lottie: ^0.6.0
   google_fonts: ^1.1.0
+  flutter_staggered_animations: ^0.1.2
+  animated_card: ^1.0.0+8
+  responsive_grid: ^1.2.1+1
 
 dev_dependencies:
   flutter_test:
@@ -70,4 +73,3 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

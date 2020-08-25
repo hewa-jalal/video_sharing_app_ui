@@ -1,5 +1,10 @@
+import 'package:animated_card/animated_card.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:responsive_grid/responsive_grid.dart';
+import 'package:video_sharing_app_ui/responsive_widget.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -7,65 +12,85 @@ class HomeTab extends StatefulWidget {
 }
 
 class _HomeTabState extends State<HomeTab> {
-  @override
-  Widget build(BuildContext context) {
-    final deviceOrientation = MediaQuery.of(context).orientation;
-    return ListView.separated(
-      itemCount: 10,
-      separatorBuilder: (context, index) => Divider(
-        height: 1.0,
-        color: Colors.grey,
+  Widget _buildLandscapeList() {
+    return AnimatedCard(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/thumbnail_demo.png',
+              fit: BoxFit.cover,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    contentPadding: const EdgeInsets.all(8.0),
+                    // dense: true,
+                    title: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Text('Video Title'),
+                    ),
+                    subtitle:
+                        Text('Channel Name,   View Count,  Published Time'),
+                    trailing: Container(
+                      margin: const EdgeInsets.only(bottom: 30.0),
+                      child: Icon(Icons.more_vert),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: CircleAvatar(
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
-      itemBuilder: (context, index) {
-        if (deviceOrientation == Orientation.portrait) {
-          return _buildPortraitList();
-        }
-        return _buildLandscapeList();
-      },
     );
   }
 
-  Widget _buildLandscapeList() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
+  Widget _buildWebGrid() {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return AnimatedCard(
+      child: Column(
         children: <Widget>[
-          Container(
-            width: 336.0 / 1.5,
-            height: 188.0 / 1.5,
+          Expanded(
+            // width: double.infinity,
+            // height: 400.h,
             child: Image.asset(
-              'assets/images/youtube_size.png',
+              'assets/images/thumbnail_demo.png',
               fit: BoxFit.cover,
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
-                  // dense: true,
-                  title: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text('Video Title'),
-                  ),
-                  subtitle: Text('Channel Name,   View Count,  Published Time'),
-                  trailing: Container(
-                    margin: const EdgeInsets.only(bottom: 30.0),
-                    child: Icon(Icons.more_vert),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: CircleAvatar(
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black,
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                ),
-              ],
+          ListTile(
+            contentPadding: const EdgeInsets.all(8.0),
+            dense: true,
+            leading: CircleAvatar(
+              child: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+              backgroundColor: Colors.red,
+            ),
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Text('Video Title'),
+            ),
+            subtitle: Text('Channel Name,   View Count,  Published Time'),
+            trailing: Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
+              child: Icon(Icons.more_vert),
             ),
           )
         ],
@@ -74,37 +99,138 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   Widget _buildPortraitList() {
-    return Column(
-      children: <Widget>[
-        Container(
-          width: double.infinity,
-          height: 200,
-          child: Image.asset(
-            'assets/images/youtube_size.png',
-            fit: BoxFit.cover,
+    return AnimatedCard(
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            height: 200,
+            child: Image.asset(
+              'assets/images/thumbnail_demo.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          ListTile(
+            contentPadding: const EdgeInsets.all(8.0),
+            dense: true,
+            leading: CircleAvatar(
+              child: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+              backgroundColor: Colors.red,
+            ),
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Text('Video Title'),
+            ),
+            subtitle: Text('Channel Name,   View Count,  Published Time'),
+            trailing: Container(
+              margin: const EdgeInsets.only(bottom: 20.0),
+              child: Icon(Icons.more_vert),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final deviceOrientation = MediaQuery.of(context).orientation;
+    ScreenUtil.init(context);
+
+    return SafeArea(
+      child: Scaffold(
+        body: !kIsWeb
+            ? ListView.separated(
+                itemCount: 10,
+                separatorBuilder: (context, index) => Divider(
+                  height: 1.0,
+                  color: Colors.grey,
+                ),
+                itemBuilder: (context, index) {
+                  if (deviceOrientation == Orientation.portrait) {
+                    return _buildPortraitList();
+                  }
+                  return _buildLandscapeList();
+                },
+              )
+            : ResponsiveWidget(
+                largeScreen: GridView.count(
+                  padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+                  crossAxisSpacing: 10.w,
+                  mainAxisSpacing: 10.h,
+                  crossAxisCount: 5,
+                  children: List.generate(
+                    12,
+                    (index) => _buildWebGrid(),
+                  ),
+                ),
+                smallScreen: ListView.separated(
+                  itemCount: 10,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1.0,
+                    color: Colors.grey,
+                  ),
+                  itemBuilder: (context, index) => _buildPortraitList(),
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+class ProjectWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    return AnimatedCard(
+      child: Card(
+        margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 10.0),
+        child: InkWell(
+          // onTap: onProjectClick,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                    flex: 40,
+                    child: Image.asset(
+                      'assets/images/thumbnail_demo.png',
+                      width: width * .25,
+                      height: width * .25,
+                    )),
+                Expanded(
+                  flex: 3,
+                  child: Container(),
+                ),
+                Expanded(
+                  flex: 60,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      children: <Widget>[
+                        Text('_project.name'),
+                        SizedBox(height: height * .01),
+                        Text(
+                          '_project.description',
+                          textScaleFactor: 1.2,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-        ListTile(
-          contentPadding: const EdgeInsets.all(8.0),
-          dense: true,
-          leading: CircleAvatar(
-            child: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
-            backgroundColor: Colors.red,
-          ),
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 4.0),
-            child: Text('Video Title'),
-          ),
-          subtitle: Text('Channel Name,   View Count,  Published Time'),
-          trailing: Container(
-            margin: const EdgeInsets.only(bottom: 20.0),
-            child: Icon(Icons.more_vert),
-          ),
-        )
-      ],
+      ),
     );
   }
 }
