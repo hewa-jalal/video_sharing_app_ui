@@ -26,8 +26,8 @@ class UploadPage extends StatelessWidget {
           SizedBox(height: 140.0.h),
           SizedBox(
             height: 300,
-            child: Image.asset(
-              'assets/images/upload.png',
+            child: Lottie.asset(
+              'assets/images/upload_anim.json',
             ),
           ),
         ],

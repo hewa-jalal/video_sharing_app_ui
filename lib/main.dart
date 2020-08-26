@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_sharing_app_ui/pages/details_page.dart';
 import 'package:video_sharing_app_ui/pages/home_tab.dart';
 
 void main() {
@@ -11,10 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      // theme: ThemeData.dark().copyWith(),
       home: HomeTab(),
     );
   }
